@@ -24,7 +24,7 @@ gemini_api_key = os.getenv("GEMINI_API_KEY")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from config.config import load_config
 from cameras.recevier import CameraReceiver
-from RAIT.functions.utils_main import deproject_pixel_to_point, transform_coordinates
+from functions.utils_main import deproject_pixel_to_point, transform_coordinates
 
 class Gemini_Inference:
     """

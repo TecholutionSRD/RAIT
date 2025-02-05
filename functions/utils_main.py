@@ -10,7 +10,7 @@ import pyrealsense2 as rs
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from config.config import load_config
 
-config = load_config("/home/shreyas/Desktop/Stream/RAIT/config/config.yaml")
+config = load_config("C:/Users/ASUS/Desktop/Techolution/Stream/RAIT/config/config.yaml")
 
 camera_transformations = config['Camera']['D435I']['India']['Transformations']
 camera_intrinsics = config['Camera']['D435I']['India']['Intrinsics']['Color_Intrinsics']

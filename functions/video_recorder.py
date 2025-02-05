@@ -186,14 +186,14 @@ class VideoRecorder:
         """
         self.config = config.get("Video_Recorder", {})
         self.receiver = receiver
-        self.output_dir = self.config['data_path']  # Base output directory
+        self.output_dir = self.config['data_path']
         self.num_recordings = num_recordings
         self.action_name = action_name
         self.objects = objects
         self.sample_count = 0
+        os.makedirs(self.output_dir, exist_ok=True)
         existing_samples = [d for d in os.listdir(self.output_dir) if d.startswith("sample_")]
         self.sample_count = len(existing_samples)
-        os.makedirs(self.output_dir, exist_ok=True)
     
     def create_sample_directory(self):
         """
@@ -316,8 +316,6 @@ class VideoRecorder:
 if __name__ == "__main__":
     config = load_config("config/config.yaml")
     receiver = CameraReceiver(config)
-    video_config = load_config("config/config.yaml")['Video_Recorder']
-
     # Define the parameters to pass to VideoRecorder
     num_recordings = 1
     action_name = "pouring"
