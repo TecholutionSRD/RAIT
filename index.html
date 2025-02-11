@@ -6,12 +6,13 @@
     <title>Robotics AI Functions Documentation</title>
     <style>
         :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e40af;
-            --background-color: #f3f4f6;
-            --text-color: #1f2937;
-            --code-bg: #1f2937;
-            --code-color: #e5e7eb;
+            --primary-color: #0071E3; /* Apple Blue */
+            --secondary-color: #370265; /* Apple Red */
+            --background-color: #F5F5F7; /* Light Gray */
+            --text-color: #1D1D1F; /* Apple Text Color */
+            --code-bg: #F0F0F5; /* Light Gray for Code Background */
+            --code-color: #1D1D1F; /* Apple Text Color */
+            --border-color: #D2D2D7; /* Light Border Color */
         }
 
         * {
@@ -21,45 +22,49 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
             color: var(--text-color);
             background-color: var(--background-color);
             padding: 2rem;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             color: var(--primary-color);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             text-align: center;
         }
 
         .function-section {
-            margin-bottom: 2rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;    
             overflow: hidden;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .function-header {
             background-color: var(--primary-color);
             color: white;
-            padding: 1rem;
+            padding: 0.8rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: background-color 0.3s ease;
+            font-size: 1rem;
         }
 
         .function-header:hover {
@@ -68,11 +73,11 @@
 
         .function-header h2 {
             margin: 0;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
         }
 
         .function-content {
-            padding: 1.5rem;
+            padding: 1.2rem;
             display: none;
             background-color: white;
         }
@@ -82,21 +87,23 @@
         }
 
         .endpoint-details {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
         }
 
         .endpoint-details h3 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
         }
 
         .code-block {
             background-color: var(--code-bg);
             color: var(--code-color);
-            padding: 1rem;
+            padding: 0.8rem;
             border-radius: 6px;
             overflow-x: auto;
-            margin: 1rem 0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
         }
 
         .code-block pre {
@@ -108,38 +115,41 @@
             width: 100%;
             border-collapse: collapse;
             margin: 1rem 0;
+            font-size: 0.9rem;
         }
 
         .parameter-table th,
         .parameter-table td {
-            padding: 0.75rem;
-            border: 1px solid #e5e7eb;
+            padding: 0.6rem;
+            border: 1px solid var(--border-color);
             text-align: left;
         }
 
         .parameter-table th {
-            background-color: #f8fafc;
+            background-color: #f1f5f9;
             font-weight: 600;
         }
 
         .status-codes {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
 
         .status-codes h4 {
             color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
         }
 
         .status-list {
             list-style: none;
+            font-size: 0.9rem;
         }
 
         .status-list li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
 
         .status-code {
@@ -158,8 +168,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>Robotics AI Functions</h1>
-
+        <h1>Robotics AI Toolkit</h1>
+        <p style="text-align: center; margin-bottom: 2rem;">Documentation for Robotics AI Functions and Endpoints</p>
         <!-- Gemini Inference Section -->
         <div class="function-section">
             <div class="function-header" onclick="toggleSection('gemini')">
@@ -293,8 +303,88 @@
                 </div>
             </div>
         </div>
+
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('knowledge-check')">
+                <h2>Knowledge Base Check</h2>
+                <span class="arrow" id="knowledge-check-arrow">▼</span>
+            </div>
+            <div class="function-content" id="knowledge-check-content">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /check_knowledge</p>
+                <p><strong>Method:</strong> GET</p>
+                <p><strong>Description:</strong> Retrieves all known grasps and actions from the database.</p>
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "grasps": ["grasp1", "grasp2"],
+    "actions": ["action1", "action2"]
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('specific-knowledge-check')">
+                <h2>Specific Knowledge Check</h2>
+                <span class="arrow" id="specific-knowledge-check-arrow">▼</span>
+            </div>
+            <div class="function-content" id="specific-knowledge-check-content">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /check_specific_knowledge</p>
+                <p><strong>Method:</strong> GET</p>
+                <p><strong>Description:</strong> Checks if a specific grasp or action exists in the database.</p>
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "name": "item_name",
+    "grasp": true|false,
+    "action": true|false
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('onboarding-information')">
+                <h2>Onboarding Information</h2>
+                <span class="arrow" id="onboarding-information-arrow">▼</span>
+            </div>
+            <div class="function-content" id="onboarding-information-content">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /onboarding_information</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Handles the onboarding process for new actions.</p>
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "action_name": "string",
+    "description": "string",
+    "objects": ["object1", "object2"],
+    "confirm": true|false
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('onboarding-confirmation')">
+                <h2>Onboarding Confirmation</h2>
+                <span class="arrow" id="onboarding-confirmation-arrow">▼</span>
+            </div>
+            <div class="function-content" id="onboarding-confirmation-content">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /confirm_onboarding</p>
+                <p><strong>Method:</strong> GET</p>
+                <p><strong>Description:</strong> Confirms or cancels the onboarding process.</p>
+            </div>
+        </div>
     </div>
 
+    </div>
+    <footer style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: var(--text-color);">
+        <p>Made by SRDdev</p>
+    </footer>
     <script>
         function toggleSection(section) {
             const content = document.getElementById(`${section}-content`);

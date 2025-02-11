@@ -191,7 +191,7 @@ class CameraReceiver:
 if __name__ == "__main__":
     config = load_config("config/config.yaml")
     receiver = CameraReceiver(config)
-    # asyncio.run(receiver.display())
-    asyncio.run(receiver.capture_frames("data/captured_frames"))
-    output = asyncio.run(receiver.capture_frames("data/captured_frames"))
-    print(output)
+    asyncio.run(receiver.display())
+    # asyncio.run(receiver.capture_frames("data/captured_frames"))
+    # output = asyncio.run(receiver.capture_frames("data/captured_frames"))
+    # print(output)
