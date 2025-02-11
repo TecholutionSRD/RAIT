@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robotics AI Functions Documentation</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f3f4f6;
+            --text-color: #1f2937;
+            --code-bg: #1f2937;
+            --code-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .function-section {
+            margin-bottom: 2rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .function-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .function-header:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .function-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .function-content {
+            padding: 1.5rem;
+            display: none;
+            background-color: white;
+        }
+
+        .function-content.active {
+            display: block;
+        }
+
+        .endpoint-details {
+            margin-bottom: 1.5rem;
+        }
+
+        .endpoint-details h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            color: var(--code-color);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .parameter-table th,
+        .parameter-table td {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .parameter-table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .status-codes {
+            margin-top: 1.5rem;
+        }
+
+        .status-codes h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-list {
+            list-style: none;
+        }
+
+        .status-list li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-code {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .arrow.active {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Robotics AI Functions</h1>
+
+        <!-- Gemini Inference Section -->
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('gemini')">
+                <h2>Gemini Inference</h2>
+                <span class="arrow" id="gemini-arrow">▼</span>
+            </div>
+            <div class="function-content" id="gemini-content">
+                <div class="endpoint-details">
+                    <h3>Endpoint Information</h3>
+                    <p><strong>URL:</strong> /gemini_inference</p>
+                    <p><strong>Method:</strong> POST</p>
+                    <p><strong>Description:</strong> Performs object detection using Google's Gemini Model on the provided image.</p>
+                </div>
+
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "image": "base64_encoded_image",
+    "target_classes": ["class1", "class2"]
+}</pre>
+                </div>
+
+                <h3>Parameters</h3>
+                <table class="parameter-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>image</td>
+                        <td>string</td>
+                        <td>Base64 encoded image data</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>target_classes</td>
+                        <td>array</td>
+                        <td>Array of class names to detect</td>
+                        <td>Yes</td>
+                    </tr>
+                </table>
+
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "detected_objects": {
+        "object_name": [xmin, ymin, xmax, ymax]
+    }
+}</pre>
+                </div>
+
+                <div class="status-codes">
+                    <h4>Status Codes</h4>
+                    <ul class="status-list">
+                        <li><span class="status-code">200</span> Successful detection</li>
+                        <li><span class="status-code">400</span> Invalid input format</li>
+                        <li><span class="status-code">500</span> Server error</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Recorder Section -->
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('video')">
+                <h2>Video Recorder</h2>
+                <span class="arrow" id="video-arrow">▼</span>
+            </div>
+            <div class="function-content" id="video-content">
+                <div class="endpoint-details">
+                    <h3>Endpoint Information</h3>
+                    <p><strong>URL:</strong> /video_recorder</p>
+                    <p><strong>Method:</strong> POST</p>
+                    <p><strong>Description:</strong> Records an 8-second video at 30 FPS and saves frames at 2 FPS, while also capturing initial RGB and depth images.</p>
+                </div>
+
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "num_recordings": 1,
+    "action_name": "pouring",
+    "objects": ["red soda can", "white cup"]
+}</pre>
+                </div>
+
+                <h3>Parameters</h3>
+                <table class="parameter-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>num_recordings</td>
+                        <td>integer</td>
+                        <td>Number of video recordings to capture</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>action_name</td>
+                        <td>string</td>
+                        <td>Name of the action being recorded</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td>objects</td>
+                        <td>array</td>
+                        <td>Array of object names involved in the action</td>
+                        <td>Yes</td>
+                    </tr>
+                </table>
+
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "status": "success",
+    "message": "Video and frames saved successfully."
+}</pre>
+                </div>
+
+                <div class="status-codes">
+                    <h4>Status Codes</h4>
+                    <ul class="status-list">
+                        <li><span class="status-code">200</span> Recording successful</li>
+                        <li><span class="status-code">400</span> Invalid parameters</li>
+                        <li><span class="status-code">500</span> Recording error</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(section) {
+            const content = document.getElementById(`${section}-content`);
+            const arrow = document.getElementById(`${section}-arrow`);
+            content.classList.toggle('active');
+            arrow.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
