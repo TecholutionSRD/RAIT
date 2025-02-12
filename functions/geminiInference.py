@@ -17,7 +17,6 @@ import sys
 from PIL import Image
 from dotenv import load_dotenv
 
-
 load_dotenv()
 gemini_api_key = os.getenv("GEMINI_API_KEY")
 
@@ -25,6 +24,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 from config.config import load_config
 from cameras.recevier import CameraReceiver
 from RAIT.functions.utilFunctions import deproject_pixel_to_point, transform_coordinates
+
 
 class Gemini_Inference:
     """
@@ -62,6 +62,7 @@ class Gemini_Inference:
             "For multiple instances of similar objects, append numbers like '<detailed_object_name>_1', '<detailed_object_name>_2'.\n"
             "Focus on accuracy and detail in object descriptions."
         )
+        # self.detection_prompt = ("You are a world-class computer vision expert. Analyze this image carefully and detect all objects with detailed descriptions." "If an object is unique in the image, a general description (e.g., 'soda can') is sufficient. However, if multiple similar objects are present, use specific identifiers such as color, brand names, or distinctive features (e.g., 'red Coca-Cola can', 'blue Pepsi can')")
         self.capture_state = False
     
     @staticmethod
@@ -221,7 +222,7 @@ class Gemini_Inference:
         """
         recording_dir = self.config.get("recording_dir")
         save_path = f"{recording_dir}/{int(time.time())}"
-        frames = await camera.capture_frames(save_path)  # Add await here
+        frames = await camera.capture_frames(save_path)
         color_frame_path = frames.get('rgb')
         depth_frame_path = frames.get('depth')
         intrinsics = camera._get_intrinsics(location='India', camera_name='D435I')
@@ -230,15 +231,33 @@ class Gemini_Inference:
         color_image = Image.open(color_frame_path)
         print("Gemini Inference: Processing frame...")
         output = self.get_object_center(color_image, target_class[0])
+        print(f"Output: {output}")
+        
         pixel_center = output.get('center')
+        print(f"Pixel Center Type: {type(pixel_center)}")
+        print(f"Pixel Center Value: {pixel_center}")
+        
         if not pixel_center:
             print("No object detected.")
             return None
-            
+        
+        print("Depth image path: ", depth_frame_path)
         depth_image = np.load(depth_frame_path)
-        depth_center = deproject_pixel_to_point(pixel_center, depth_image, intrinsics=intrinsics)
+        depth_image = depth_image.reshape(640, 480)
+        print(f"Shape of Depth: {depth_image.shape}")
+        print("Deprojecting pixel to point...")
+        try:
+            depth_center = deproject_pixel_to_point(depth_image,pixel_center, intrinsics=intrinsics)
+        except Exception as e:
+            print(f"Error deprojecting pixel: {e}")
+            return None
+        
+        print(f"Depth Center: {depth_center}")
         transformed_center = transform_coordinates(*depth_center)
+        print(f"Transformed Center: {transformed_center}")
+
         return transformed_center
+
 
     def detect_objects(self, rgb_frame: Image.Image) -> List[str]:
         """
@@ -278,6 +297,7 @@ class Gemini_Inference:
 
 
 if __name__ == "__main__":
+
     async def main():
         config = load_config("config/config.yaml")
         gemini_config = config.get("Gemini", {})

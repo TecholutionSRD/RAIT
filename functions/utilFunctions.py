@@ -10,7 +10,7 @@ import pyrealsense2 as rs
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from config.config import load_config
 
-config = load_config("C:/Users/ASUS/Desktop/Techolution/Stream/RAIT/config/config.yaml")
+config = load_config("../RAIT/config/config.yaml")
 
 camera_transformations = config['Camera']['D435I']['India']['Transformations']
 camera_intrinsics = config['Camera']['D435I']['India']['Intrinsics']['Color_Intrinsics']
@@ -51,30 +51,32 @@ def get_valid_depth(depth_array, x, y):
     return 0, x, y
 
 def deproject_pixel_to_point(depth_array, pixel_coords, intrinsics):
-    """
-    Deproject pixel coordinates and depth to 3D point using RealSense intrinsics.
-
-    Converts 2D pixel coordinates and corresponding depth values into 3D points
-    using the RealSense camera's intrinsic parameters. Handles invalid depth values
-    by searching nearby pixels.
-
-    Args:
-        depth_array (numpy.ndarray): 2D array of depth values
-        pixel_coords (tuple): (x, y) pixel coordinates to deproject
-        intrinsics (dict): RealSense camera intrinsic parameters
-
-    Returns:
-        numpy.ndarray: 3D point coordinates [x, y, z] in camera space.
-        Returns [0, 0, 0] if no valid depth is found or coordinates are out of bounds.
-    """
+    """Deproject pixel coordinates and depth to 3D point using RealSense intrinsics."""
+    
     x, y = int(pixel_coords[0]), int(pixel_coords[1])
+    print(f"Received pixel coordinates: ({x}, {y})")
+
+    # Check if the pixel is within valid bounds
     if x < 0 or x >= depth_array.shape[1] or y < 0 or y >= depth_array.shape[0]:
+        print(f"Pixel ({x}, {y}) is out of bounds. Returning (0, 0, 0).")
         return np.array([0, 0, 0])
+    
+    print("Depth:",depth_array.shape)
+    print("X",x)
+    print("Y",y)
+    # Get valid depth and adjusted pixel coordinates
     depth, valid_x, valid_y = get_valid_depth(depth_array, x, y)
+    print(f"Retrieved depth: {depth} at adjusted pixel ({valid_x}, {valid_y})")
+
+    # Check if depth is valid
     if depth == 0:
-        print(f"Warning: No valid depth found near pixel ({x}, {y})")
+        print(f"No valid depth found near pixel ({x}, {y}). Returning (0, 0, 0).")
         return np.array([0, 0, 0])
+
+    # Perform deprojection
     point_3d = rs.rs2_deproject_pixel_to_point(intrinsics, [valid_x, valid_y], depth)
+    print(f"Deprojected 3D point: {point_3d}")
+
     return np.array(point_3d)
 
 def transform_coordinates(x, y, z):
@@ -92,8 +94,8 @@ def transform_coordinates(x, y, z):
     Returns:
         tuple: (transformed_x, transformed_y, transformed_z) in robot base frame (millimeters)
     """
-    calib_matrix_x = np.array(config['Transformations']['X'])
-    calib_matrix_y = np.array(config['Transformations']['Y'])
+    calib_matrix_x = np.array(camera_transformations['X'])
+    calib_matrix_y = np.array(camera_transformations['Y'])
     B = np.eye(4)
     B[:3, 3] = [x / 1000, y / 1000, z / 1000]
     A = calib_matrix_y @ B @ np.linalg.inv(calib_matrix_x)

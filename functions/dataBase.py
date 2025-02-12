@@ -42,7 +42,7 @@ def check_knowledgebase(db_config):
     if not os.path.exists(grasp_db_path) or not os.path.exists(action_db_path):
         print("Creating knowledge base...")
         if not os.path.exists(grasp_db_path):
-            pd.DataFrame(columns=["name", "offset", "pickup_type"]).to_csv(grasp_db_path, index=False)
+            pd.DataFrame(columns=["name", "grasp_distance", "pickup_type"]).to_csv(grasp_db_path, index=False)
         if not os.path.exists(action_db_path):
             pd.DataFrame(columns=["name", "model", "num_samples"]).to_csv(action_db_path, index=False)
     
