@@ -10,29 +10,77 @@ import pyrealsense2 as rs
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from config.config import load_config
 
-config = load_config("../RAIT/config/config.yaml")
+config = load_config("config/config.yaml")
 
 camera_transformations = config['Camera']['D435I']['India']['Transformations']
 camera_intrinsics = config['Camera']['D435I']['India']['Intrinsics']['Color_Intrinsics']
 #----------------------------------------------------------------#
+# def get_valid_depth(depth_array, x, y):
+#     """
+#     Find the first non-zero depth value within a 10-pixel radius around the given point.
+
+#     Searches in increasing radius up to 10 pixels until a valid (non-zero) depth value
+#     is found. This helps handle cases where the target pixel has invalid depth data.
+
+#     Args:
+#         depth_array (numpy.ndarray): 2D array containing depth values
+#         x (int): Target x-coordinate in the depth array
+#         y (int): Target y-coordinate in the depth array
+
+#     Returns:
+#         tuple: (depth, x, y) where:
+#             - depth (float): Valid depth value or 0 if none found
+#             - x (int): X-coordinate of valid depth point
+#             - y (int): Y-coordinate of valid depth point
+#     """
+#     height, width = depth_array.shape
+#     if depth_array[y, x] > 0:
+#         return depth_array[y, x], x, y
+
+#     max_radius = 10
+#     for radius in range(1, max_radius + 1):
+#         for dx in range(-radius, radius + 1):
+#             for dy in range(-radius, radius + 1):
+#                 new_x = x + dx
+#                 new_y = y + dy
+#                 if 0 <= new_x < width and 0 <= new_y < height:
+#                     depth = depth_array[new_y, new_x]
+#                     if depth > 0:
+#                         return depth, new_x, new_y
+
+#     return 0, x, y
+
+# def deproject_pixel_to_point(depth_array, pixel_coords, intrinsics):
+#     """Deproject pixel coordinates and depth to 3D point using RealSense intrinsics."""
+    
+#     x, y = int(pixel_coords[0]), int(pixel_coords[1])
+#     print(f"Received pixel coordinates: ({x}, {y})")
+
+#     # Check if the pixel is within valid bounds
+#     if x < 0 or x >= depth_array.shape[0] or y < 0 or y >= depth_array.shape[1]:
+#         print(f"Pixel ({x}, {y}) is out of bounds. Returning (0, 0, 0).")
+#         return np.array([0, 0, 0])
+    
+#     print("Depth:",depth_array.shape)
+#     print("X",x)
+#     print("Y",y)
+#     # Get valid depth and adjusted pixel coordinates
+#     depth, valid_x, valid_y = get_valid_depth(depth_array, x, y)
+#     print(f"Retrieved depth: {depth} at adjusted pixel ({valid_x}, {valid_y})")
+
+#     # Check if depth is valid
+#     if depth == 0:
+#         print(f"No valid depth found near pixel ({x}, {y}). Returning (0, 0, 0).")
+#         return np.array([0, 0, 0])
+
+#     # Perform deprojection
+#     point_3d = rs.rs2_deproject_pixel_to_point(intrinsics, [valid_x,valid_y], depth/1000)
+#     print(f"Deprojected 3D point: {point_3d}")
+
+#     return np.array(point_3d)
+
 def get_valid_depth(depth_array, x, y):
-    """
-    Find the first non-zero depth value within a 10-pixel radius around the given point.
-
-    Searches in increasing radius up to 10 pixels until a valid (non-zero) depth value
-    is found. This helps handle cases where the target pixel has invalid depth data.
-
-    Args:
-        depth_array (numpy.ndarray): 2D array containing depth values
-        x (int): Target x-coordinate in the depth array
-        y (int): Target y-coordinate in the depth array
-
-    Returns:
-        tuple: (depth, x, y) where:
-            - depth (float): Valid depth value or 0 if none found
-            - x (int): X-coordinate of valid depth point
-            - y (int): Y-coordinate of valid depth point
-    """
+    """Find the first non-zero depth value within a 10-pixel radius around the given point."""
     height, width = depth_array.shape
     if depth_array[y, x] > 0:
         return depth_array[y, x], x, y
@@ -52,32 +100,17 @@ def get_valid_depth(depth_array, x, y):
 
 def deproject_pixel_to_point(depth_array, pixel_coords, intrinsics):
     """Deproject pixel coordinates and depth to 3D point using RealSense intrinsics."""
-    
     x, y = int(pixel_coords[0]), int(pixel_coords[1])
-    print(f"Received pixel coordinates: ({x}, {y})")
-
-    # Check if the pixel is within valid bounds
     if x < 0 or x >= depth_array.shape[1] or y < 0 or y >= depth_array.shape[0]:
-        print(f"Pixel ({x}, {y}) is out of bounds. Returning (0, 0, 0).")
+        print
         return np.array([0, 0, 0])
-    
-    print("Depth:",depth_array.shape)
-    print("X",x)
-    print("Y",y)
-    # Get valid depth and adjusted pixel coordinates
     depth, valid_x, valid_y = get_valid_depth(depth_array, x, y)
-    print(f"Retrieved depth: {depth} at adjusted pixel ({valid_x}, {valid_y})")
-
-    # Check if depth is valid
     if depth == 0:
-        print(f"No valid depth found near pixel ({x}, {y}). Returning (0, 0, 0).")
+        print(f"Warning: No valid depth found near pixel ({x}, {y})")
         return np.array([0, 0, 0])
-
-    # Perform deprojection
     point_3d = rs.rs2_deproject_pixel_to_point(intrinsics, [valid_x, valid_y], depth)
-    print(f"Deprojected 3D point: {point_3d}")
-
     return np.array(point_3d)
+
 
 def transform_coordinates(x, y, z):
     """

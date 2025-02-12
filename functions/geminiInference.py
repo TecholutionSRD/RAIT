@@ -23,7 +23,7 @@ gemini_api_key = os.getenv("GEMINI_API_KEY")
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from config.config import load_config
 from cameras.recevier import CameraReceiver
-from RAIT.functions.utilFunctions import deproject_pixel_to_point, transform_coordinates
+from functions.utilFunctions import deproject_pixel_to_point, transform_coordinates
 
 
 class Gemini_Inference:
@@ -158,9 +158,11 @@ class Gemini_Inference:
             return None
 
         box = results[target_class]
+        box = self.normalize_box(box)
         center_x = (box[0] + box[2]) // 2
         center_y = (box[1] + box[3]) // 2
         detection_results = {"center": (center_x, center_y), "box": box, "confidence": 100}
+        print(f"Normalized Box: {box}")
         self.detection_results = detection_results
         return detection_results
     
@@ -222,9 +224,13 @@ class Gemini_Inference:
         """
         recording_dir = self.config.get("recording_dir")
         save_path = f"{recording_dir}/{int(time.time())}"
-        frames = await camera.capture_frames(save_path)
-        color_frame_path = frames.get('rgb')
-        depth_frame_path = frames.get('depth')
+        # frames = await camera.capture_frames(save_path)
+        # color_frame_path = frames.get('rgb')
+        # depth_frame_path = frames.get('depth')
+
+        color_frame_path = "/home/shreyas/Desktop/Stream/Realtime-WebRTC/data/captured__frames/1739381359/rgb/image_0.jpg"
+        depth_frame_path = "/home/shreyas/Desktop/Stream/Realtime-WebRTC/data/captured__frames/1739381359/depth/image_0.npy"
+
         intrinsics = camera._get_intrinsics(location='India', camera_name='D435I')
         
         self.set_target_classes(target_class)
@@ -243,7 +249,6 @@ class Gemini_Inference:
         
         print("Depth image path: ", depth_frame_path)
         depth_image = np.load(depth_frame_path)
-        depth_image = depth_image.reshape(640, 480)
         print(f"Shape of Depth: {depth_image.shape}")
         print("Deprojecting pixel to point...")
         try:
@@ -294,27 +299,32 @@ class Gemini_Inference:
                 object_names.append(base_name)
                 
         return object_names
+    
+    def normalize_box(self, box, width=640, height=480):
+        """
+        Normalize bounding boxes from pixel coordinates to [0, 1] range.
 
+        Args:
+            boxes (list): List of bounding boxes in [ymin, xmin, ymax, xmax] format.
+            width (int): Image width.
+            height (int): Image height.
 
+        Returns:
+            list: Normalized bounding boxes in [ymin, xmin, ymax, xmax] format.
+        """
+
+        ymin, xmin, ymax, xmax = box
+        normalized_box = [ xmin / 1000*width, ymin / 1000*height, xmax / 1000*width, ymax / 1000*height]
+        return normalized_box
+    
 if __name__ == "__main__":
 
     async def main():
         config = load_config("config/config.yaml")
-        gemini_config = config.get("Gemini", {})
         camera = CameraReceiver(config)
         gemini = Gemini_Inference(config)
-        recording_dir = gemini_config.get("recording_dir")
-        save_path = f"{recording_dir}/{int(time.time())}"
-        print(save_path)
-        
-        frames = await camera.capture_frames(save_path)
-        color_frame_path = frames.get('rgb')
-        
-        if color_frame_path:
-            color_image = Image.open(color_frame_path)
-            detected_objects = gemini.detect_objects(color_image)
-            print(f"Detected objects: {detected_objects}")
-        else:
-            print("No frames received or saved.")
-
+        # camera = None
+        detected_objects = await gemini.detect(camera, target_class=['bottle'])
+        print(f"Detected objects: {detected_objects}")
     asyncio.run(main())
+    
