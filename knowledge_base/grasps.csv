@@ -1,3 +1,4 @@
 name,grasp_distance,pickup_mode
-coke can,10.0,HORIZONTAL
-bottle, 10.0,HORIZONTAL
+red soda can,10,HORIZONTAL
+bottle,10,HORIZONTAL
+stainless steel water bottle,10,HORIZONTAL

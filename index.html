@@ -13,6 +13,7 @@
             --code-bg: #F0F0F5; /* Light Gray for Code Background */
             --code-color: #1D1D1F; /* Apple Text Color */
             --border-color: #D2D2D7; /* Light Border Color */
+            --simulation-color: #FFA500; /* Orange for Simulation Section */
         }
 
         * {
@@ -42,6 +43,13 @@
             font-size: 2rem;
             color: var(--primary-color);
             margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
             text-align: center;
         }
 
@@ -164,13 +172,261 @@
         .arrow.active {
             transform: rotate(180deg);
         }
+
+        .simulation-section .function-header {
+            background-color: var(--simulation-color);
+        }
+
+        .simulation-section .function-header:hover {
+            background-color: darkorange;
+        }
+
+        .simulation-section .endpoint-details h3 {
+            color: var(--simulation-color);
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Robotics AI Toolkit</h1>
+        <h1 style="font-weight: bold; color: black;">Robotics AI Toolkit</h1>
         <p style="text-align: center; margin-bottom: 2rem;">Documentation for Robotics AI Functions and Endpoints</p>
-        <!-- Gemini Inference Section -->
+
+        <!-- Simulation Tools Section -->
+        <div class="section-title" style="font-weight: bold; color: #FFA500;">Simulation Tools</div>
+        <div class="simulation-section">
+            <div class="function-section">
+            <div class="function-header" onclick="toggleSection('simulate')">
+                <h2>Simulation Mode</h2>
+                <span class="arrow" id="simulate-arrow">▼</span>
+            </div>
+            <div class="function-content" id="simulate-content">
+                <div class="endpoint-details">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /simulate</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Opens a new browser tab showing a 3D simulation of the robot executing tasks.</p>
+                
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "enable_simulation": true
+    }</pre>
+                </div>
+
+                <h3>Parameters</h3>
+                <table class="parameter-table">
+                    <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                    </tr>
+                    <tr>
+                    <td>enable_simulation</td>
+                    <td>boolean</td>
+                    <td>Enable or disable simulation mode</td>
+                    <td>Yes</td>
+                    </tr>
+                </table>
+
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "status": "success",
+        "message": "Simulation started successfully"
+    }</pre>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="function-section">
+            <div class="function-header" onclick="toggleSection('load-scenario')">
+                <h2>Load Scene</h2>
+                <span class="arrow" id="load-scenario-arrow">▼</span>
+            </div>
+            <div class="function-content" id="load-scenario-content">
+                <div class="endpoint-details">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /load_scenario</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Loads a specific scenario for the robot to execute.</p>
+
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "load_scene": true
+    }</pre>
+                </div>
+
+                <h3>Parameters</h3>
+                <table class="parameter-table">
+                    <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                    </tr>
+                    <tr>
+                    <td>load_scene</td>
+                    <td>boolean</td>
+                    <td>Load or unload scene</td>
+                    <td>Yes</td>
+                    </tr>
+                </table>
+
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "status": "success",
+        "message": "Scene loaded successfully"
+    }</pre>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="function-section">
+            <div class="function-header" onclick="toggleSection('load-task')">
+                <h2>Load Task</h2>
+                <span class="arrow" id="load-task-arrow">▼</span>
+            </div>
+            <div class="function-content" id="load-task-content">
+                <div class="endpoint-details">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /load_task</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Loads a specific task for the robot to execute.</p>
+
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "load_task": true
+    }</pre>
+                </div>
+
+                <h3>Parameters</h3>
+                <table class="parameter-table">
+                    <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                    </tr>
+                    <tr>
+                    <td>load_task</td>
+                    <td>boolean</td>
+                    <td>Load or unload task</td>
+                    <td>Yes</td>
+                    </tr>
+                </table>
+
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "status": "success", 
+        "message": "Task loaded successfully"
+    }</pre>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="function-section">
+            <div class="function-header" onclick="toggleSection('plan')">
+                <h2>Plan</h2>
+                <span class="arrow" id="plan-arrow">▼</span>
+            </div>
+            <div class="function-content" id="plan-content">
+                <div class="endpoint-details">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /plan</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Initiates the planning phase for the robot's actions.</p>
+
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "start_planning": true
+    }</pre>
+                </div>
+
+                <h3>Parameters</h3>
+                <table class="parameter-table">
+                    <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                    </tr>
+                    <tr>
+                    <td>start_planning</td>
+                    <td>boolean</td>
+                    <td>Start or stop planning</td>
+                    <td>Yes</td>
+                    </tr>
+                </table>
+
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "status": "success",
+        "message": "Planning completed successfully"
+    }</pre>
+                </div>
+                </div>
+            </div>
+            </div>
+
+            <div class="function-section">
+            <div class="function-header" onclick="toggleSection('run-real-robot')">
+                <h2>Execute Real Robot</h2>
+                <span class="arrow" id="run-real-robot-arrow">▼</span>
+            </div>
+            <div class="function-content" id="run-real-robot-content">
+                <div class="endpoint-details">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /execute_real_robot</p>
+                <p><strong>Method:</strong> POST</p>
+                <p><strong>Description:</strong> Executes the robot's actions in the real world based on the current configuration.</p>
+
+                <h3>Request Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "execute": true
+    }</pre>
+                </div>
+
+                <h3>Parameters</h3>
+                <table class="parameter-table">
+                    <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                    </tr>
+                    <tr>
+                    <td>execute</td>
+                    <td>boolean</td>
+                    <td>Start or stop execution</td>
+                    <td>Yes</td>
+                    </tr>
+                </table>
+
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+        "status": "success",
+        "message": "Robot execution completed successfully"
+    }</pre>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>  
+
+        <!-- AI Tools Section -->
+        <div class="section-title" style="font-weight: bold; color: #0071E3;">AI Tools</div>
         <div class="function-section">
             <div class="function-header" onclick="toggleSection('gemini')">
                 <h2>Gemini Inference</h2>
@@ -234,7 +490,56 @@
             </div>
         </div>
 
-        <!-- Video Recorder Section -->
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('object-centers')">
+            <h2>Object Centers</h2>
+            <span class="arrow" id="object-centers-arrow">▼</span>
+            </div>
+            <div class="function-content" id="object-centers-content">
+            <div class="endpoint-details">
+                    <h3>Endpoint Information</h3>
+                    <p><strong>URL:</strong> /object_centers</p>
+                    <p><strong>Method:</strong> POST</p>
+                    <p><strong>Description:</strong> Retrieves the 3D coordinates of specified objects detected by the robot's vision system.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('knowledge-check')">
+                <h2>Knowledge Base Check</h2>
+                <span class="arrow" id="knowledge-check-arrow">▼</span>
+            </div>
+            <div class="function-content" id="knowledge-check-content">
+                <h3>Endpoint Information</h3>
+                <p><strong>URL:</strong> /check_knowledge</p>
+                <p><strong>Method:</strong> GET</p>
+                <p><strong>Description:</strong> Retrieves all known grasps and actions from the database.</p>
+                <h3>Response Format</h3>
+                <div class="code-block">
+                    <pre>{
+    "grasps": ["grasp1", "grasp2"],
+    "actions": ["action1", "action2"]
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="function-section">
+            <div class="function-header" onclick="toggleSection('onboarding-information')">
+                <h2>Onboarding Information</h2>
+                <span class="arrow" id="onboarding-information-arrow">▼</span>
+            </div>
+            <div class="function-content" id="onboarding-information-content">
+                <div class="endpoint-details">
+                    <h3>Endpoint Information</h3>
+                    <p><strong>URL:</strong> /onboarding_information</p>
+                    <p><strong>Method:</strong> POST</p>
+                    <p><strong>Description:</strong> Handles the onboarding process for new actions.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="function-section">
             <div class="function-header" onclick="toggleSection('video')">
                 <h2>Video Recorder</h2>
@@ -303,85 +608,8 @@
                 </div>
             </div>
         </div>
-
-        <div class="function-section">
-            <div class="function-header" onclick="toggleSection('knowledge-check')">
-                <h2>Knowledge Base Check</h2>
-                <span class="arrow" id="knowledge-check-arrow">▼</span>
-            </div>
-            <div class="function-content" id="knowledge-check-content">
-                <h3>Endpoint Information</h3>
-                <p><strong>URL:</strong> /check_knowledge</p>
-                <p><strong>Method:</strong> GET</p>
-                <p><strong>Description:</strong> Retrieves all known grasps and actions from the database.</p>
-                <h3>Response Format</h3>
-                <div class="code-block">
-                    <pre>{
-    "grasps": ["grasp1", "grasp2"],
-    "actions": ["action1", "action2"]
-}</pre>
-                </div>
-            </div>
-        </div>
-
-        <div class="function-section">
-            <div class="function-header" onclick="toggleSection('specific-knowledge-check')">
-                <h2>Specific Knowledge Check</h2>
-                <span class="arrow" id="specific-knowledge-check-arrow">▼</span>
-            </div>
-            <div class="function-content" id="specific-knowledge-check-content">
-                <h3>Endpoint Information</h3>
-                <p><strong>URL:</strong> /check_specific_knowledge</p>
-                <p><strong>Method:</strong> GET</p>
-                <p><strong>Description:</strong> Checks if a specific grasp or action exists in the database.</p>
-                <h3>Response Format</h3>
-                <div class="code-block">
-                    <pre>{
-    "name": "item_name",
-    "grasp": true|false,
-    "action": true|false
-}</pre>
-                </div>
-            </div>
-        </div>
-
-        <div class="function-section">
-            <div class="function-header" onclick="toggleSection('onboarding-information')">
-                <h2>Onboarding Information</h2>
-                <span class="arrow" id="onboarding-information-arrow">▼</span>
-            </div>
-            <div class="function-content" id="onboarding-information-content">
-                <h3>Endpoint Information</h3>
-                <p><strong>URL:</strong> /onboarding_information</p>
-                <p><strong>Method:</strong> POST</p>
-                <p><strong>Description:</strong> Handles the onboarding process for new actions.</p>
-                <h3>Request Format</h3>
-                <div class="code-block">
-                    <pre>{
-    "action_name": "string",
-    "description": "string",
-    "objects": ["object1", "object2"],
-    "confirm": true|false
-}</pre>
-                </div>
-            </div>
-        </div>
-
-        <div class="function-section">
-            <div class="function-header" onclick="toggleSection('onboarding-confirmation')">
-                <h2>Onboarding Confirmation</h2>
-                <span class="arrow" id="onboarding-confirmation-arrow">▼</span>
-            </div>
-            <div class="function-content" id="onboarding-confirmation-content">
-                <h3>Endpoint Information</h3>
-                <p><strong>URL:</strong> /confirm_onboarding</p>
-                <p><strong>Method:</strong> GET</p>
-                <p><strong>Description:</strong> Confirms or cancels the onboarding process.</p>
-            </div>
-        </div>
     </div>
 
-    </div>
     <footer style="text-align: center; margin-top: 2rem; font-size: 0.9rem; color: var(--text-color);">
         <p>Made by SRDdev</p>
     </footer>
