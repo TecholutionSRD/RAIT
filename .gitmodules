@@ -1,0 +1,6 @@
+[submodule "dsr_control_api"]
+	path = dsr_control_api
+	url = https://github.com/Techolution/dsr_control_api
+[submodule "Fundamental_Actions"]
+	path = Fundamental_Actions
+	url = git@github.com:SRDdev/Fundamental_Actions.git
